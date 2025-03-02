@@ -67,7 +67,17 @@ lap_gauss_config_file = {
         "extension.valueDecimal": {
             "path": ".//extension/item/valueDecimal",
             "mechanism": "Laplace",
-            "rmse_range": [5, 10]
+            "rmse_range": [1000, 1050]
+        },
+        "birthDate": {
+            "path": ".//birthDate",
+            "mechanism": "Laplace",
+            "rmse_range": [50, 100]  
+        },
+        "deceasedDateTime": {
+            "path": ".//deceasedDateTime",
+            "mechanism": "Laplace",
+            "rmse_range": [50, 100]  
         }
     }
 }
