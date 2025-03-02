@@ -17,20 +17,32 @@ def calculate_rmse_date(original_values, anonymized_values):
     rmse_results = {}
     attribute_differences = {}
 
+    # Function to parse dates flexibly
+    def parse_date(date_str):
+        try:
+            if "T" in date_str:  # ISO-Format mit Zeitstempel
+                return datetime.fromisoformat(date_str)
+            else:  # Format YYYY-MM-DD (z. B. für birthDate)
+                return datetime.strptime(date_str, "%Y-%m-%d")
+        except Exception as e:
+            print(f"Error parsing date {date_str}: {e}")
+            return None
+
     # Iterate through all keys and values in original_values
     for tag, original_value in original_values.items():
         try:
-            original_date = datetime.fromisoformat(original_value)
-            anonymized_date = datetime.fromisoformat(anonymized_values[tag])
+            original_date = parse_date(original_value)
+            anonymized_date = parse_date(anonymized_values[tag])
 
-            # Calculate the difference in days
-            difference = (original_date - anonymized_date).total_seconds() / 86400
+            if original_date and anonymized_date:
+                # Calculate the difference in days
+                difference = (original_date - anonymized_date).total_seconds() / 86400
 
-            # Extract the attribute name
-            attribute_name = tag.split("_")[0]
-            if attribute_name not in attribute_differences:
-                attribute_differences[attribute_name] = []
-            attribute_differences[attribute_name].append(difference)
+                # Extract the attribute name
+                attribute_name = tag.split("_")[0]
+                if attribute_name not in attribute_differences:
+                    attribute_differences[attribute_name] = []
+                attribute_differences[attribute_name].append(difference)
         except Exception as e:
             print(f"Errors in the processing of {tag}: {e}")
             continue
