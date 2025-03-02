@@ -111,12 +111,12 @@ def process_laplace_gaussian_wrapper(filename, original_folder_path, temp_output
             logging.info(f"--- Iteration {iteration + 1} gestartet für Datei: {filename} ---")
 
             # Group birthDate and deceasedDateTime
-            for element in root.findall(".//birthDate"):
-                if element.text:
-                    element.text = anonymize_date_grouping(element.text, grouping_type='decade')
-            for element in root.findall(".//deceasedDateTime"):
-                if element.text:
-                    element.text = anonymize_deceased_date_grouping(element.text, grouping_type='decade')
+            # for element in root.findall(".//birthDate"):
+            #     if element.text:
+            #         element.text = anonymize_date_grouping(element.text, grouping_type='decade')
+            # for element in root.findall(".//deceasedDateTime"):
+            #     if element.text:
+            #         element.text = anonymize_deceased_date_grouping(element.text, grouping_type='decade')
 
             # Processing the attributes
             for resource, attributes in config.items():
