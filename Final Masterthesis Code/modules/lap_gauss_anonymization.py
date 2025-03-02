@@ -94,27 +94,43 @@ def anonymize_dates(root, config, filename):
                         original_value = element.text
                         if original_value:
                             try:
-                                original_value_datetime = datetime.fromisoformat(original_value)
+                                if attribute == "birthDate":
+                                    original_date = datetime.strptime(original_value, "%Y-%m-%d")
+                                    epoch = datetime(1970, 1, 1)
+                                    days_since_epoch = (original_date - epoch).days
 
-                                # Anonymization of date values
-                                epoch = datetime(1970, 1, 1, tzinfo=timezone.utc)
-                                days_since_epoch = (original_value_datetime - epoch).days
+                                    if mechanism == "Laplace":
+                                        anonymized_days = laplace_mechanism(days_since_epoch, parameters["epsilon"], parameters["sensitivity"])
+                                    elif mechanism == "Gaussian":
+                                        anonymized_days = gaussian_mechanism(days_since_epoch, parameters["epsilon"], parameters["sensitivity"], parameters["delta"])
+                                    else:
+                                        raise ValueError(f"Unknown mechanism: {mechanism}")
 
-                                if mechanism == "Laplace":
-                                    anonymized_days = laplace_mechanism(days_since_epoch, parameters["epsilon"], parameters["sensitivity"])
-                                elif mechanism == "Gaussian":
-                                    anonymized_days = gaussian_mechanism(days_since_epoch, parameters["epsilon"], parameters["sensitivity"], parameters["delta"])
+                                    anonymized_date = epoch + timedelta(days=anonymized_days)
+                                    element.text = anonymized_date.strftime("%Y-%m-%d")  
+
                                 else:
-                                    raise ValueError(f"Unknown mechanism: {mechanism}")
+                                    original_value_datetime = datetime.fromisoformat(original_value)
 
-                                anonymized_datetime = epoch + timedelta(days=anonymized_days)
+                                    # Anonymization of date values
+                                    epoch = datetime(1970, 1, 1, tzinfo=timezone.utc)
+                                    days_since_epoch = (original_value_datetime - epoch).days
 
-                                if original_value_datetime.tzinfo:
-                                    anonymized_datetime = anonymized_datetime.replace(tzinfo=original_value_datetime.tzinfo)
-                                else:
-                                    anonymized_datetime = anonymized_datetime.replace(tzinfo=timezone.utc)
+                                    if mechanism == "Laplace":
+                                        anonymized_days = laplace_mechanism(days_since_epoch, parameters["epsilon"], parameters["sensitivity"])
+                                    elif mechanism == "Gaussian":
+                                        anonymized_days = gaussian_mechanism(days_since_epoch, parameters["epsilon"], parameters["sensitivity"], parameters["delta"])
+                                    else:
+                                        raise ValueError(f"Unknown mechanism: {mechanism}")
 
-                                element.text = anonymized_datetime.replace(microsecond=0).isoformat()
+                                    anonymized_datetime = epoch + timedelta(days=anonymized_days)
+
+                                    if original_value_datetime.tzinfo:
+                                        anonymized_datetime = anonymized_datetime.replace(tzinfo=original_value_datetime.tzinfo)
+                                    else:
+                                        anonymized_datetime = anonymized_datetime.replace(tzinfo=timezone.utc)
+
+                                    element.text = anonymized_datetime.replace(microsecond=0).isoformat()
 
                                 # Collect values for RMSE
                                 if attribute not in original_values:
