@@ -20,9 +20,9 @@ def calculate_rmse_date(original_values, anonymized_values):
     # Function to parse dates flexibly
     def parse_date(date_str):
         try:
-            if "T" in date_str:  # ISO-Format mit Zeitstempel
+            if "T" in date_str:  # ISO-Format 
                 return datetime.fromisoformat(date_str)
-            else:  # Format YYYY-MM-DD (z. B. für birthDate)
+            else:  # Format YYYY-MM-DD 
                 return datetime.strptime(date_str, "%Y-%m-%d")
         except Exception as e:
             print(f"Error parsing date {date_str}: {e}")
