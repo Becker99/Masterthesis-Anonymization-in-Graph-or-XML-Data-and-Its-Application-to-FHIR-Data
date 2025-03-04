@@ -69,7 +69,7 @@ def process_resource(resource, attributes, input_folder, output_folder, max_iter
     dummy_added = {attr: False for attr in attributes.keys()}
 
     for iteration in range(1, max_iterations + 1):
-        logging.info(f"--- Iteration {iteration} für Ressource {resource} ---")
+        logging.info(f"--- Iteration {iteration} for ressource {resource} ---")
 
         start_time_iteration = time.time()
         process = psutil.Process(os.getpid())  
