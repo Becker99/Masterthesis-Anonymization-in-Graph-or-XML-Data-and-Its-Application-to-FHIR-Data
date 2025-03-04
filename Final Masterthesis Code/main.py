@@ -42,21 +42,21 @@ def main():
 
     os.makedirs(temp_output_folder_path, exist_ok=True)
 
-    files_to_process = [
-        filename for filename in os.listdir(original_folder_path) if filename.endswith(".xml")
-    ]
+    # files_to_process = [
+    #     filename for filename in os.listdir(original_folder_path) if filename.endswith(".xml")
+    # ]
 
     with ProcessPoolExecutor() as executor:
         futures = [
             executor.submit(
-                process_laplace_gaussian_wrapper,
-                filename,
+                process_laplace_gaussian_wrapper, # Parallelization of Ressources per CPU Kernel
+                resource,
+                attributes,
                 original_folder_path,
                 temp_output_folder_path,  
-                lap_gauss_config_file,
                 max_iterations
             )
-            for filename in files_to_process
+            for resource, attributes in lap_gauss_config_file.items()
         ]
         for future in futures:
             future.result()
