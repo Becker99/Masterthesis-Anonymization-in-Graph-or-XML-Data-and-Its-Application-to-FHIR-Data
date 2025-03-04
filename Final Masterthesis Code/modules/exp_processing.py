@@ -53,7 +53,7 @@ def log_iteration_to_csv(resource, attribute, epsilon, sensitivity, iteration, t
         writer.writerow([resource, attribute, epsilon, sensitivity, iteration, tvd])
 
 def process_resource(resource, attributes, input_folder, output_folder, max_iterations):
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     logging.info(f"Edited resource: {resource}")
 
     # Count original values and calculate initial utility scores
